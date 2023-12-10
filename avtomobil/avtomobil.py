@@ -15,6 +15,15 @@ def output_result(car_position):
     print('-' * car_position)
 
 
+def change_position_in_race(i):
+    global car_positions
+    if random() > 0.3:
+        car_positions[i] += 1
+
+    # draw car
+    output_result(car_positions[i])
+
+
 def start_race():
     global time
     global car_positions
@@ -26,11 +35,7 @@ def start_race():
 
         for i in range(len(car_positions)):
             # move car
-            if random() > 0.3:
-                car_positions[i] += 1
-
-            # draw car
-            output_result(car_positions[i])
+            change_position_in_race(i)
 
 
 input_time_position()
