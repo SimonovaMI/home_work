@@ -15,17 +15,19 @@ def go_race():
         time -= 1
         move_cars()
 
-    def draw_car(car_position):
-        print(time, '-' * car_position)
-
-    def draw():
-        print(time)
-        for car_position in car_positions:
-            draw_car(car_position)
-
     while time:
         run_step_of_race()
-        draw()
+        draw(time, car_positions)
+
+
+def draw_car(time, car_position):
+    print(time, '-' * car_position)
+
+
+def draw(time, car_positions):
+    print(time)
+    for car_position in car_positions:
+        draw_car(time, car_position)
 
 
 go_race()
