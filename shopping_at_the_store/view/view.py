@@ -2,10 +2,11 @@
 View для реализации взаимодействия с пользователем. Формы ввода/вывода.
 """
 
-import pandas as pn
+import pandas as pd  # type: ignore
+from typing import Optional, List
 
 
-def show_main_menu():
+def show_main_menu() -> None:
     print(f'''Hello 
          1.Add
          2.Show all
@@ -16,10 +17,10 @@ def show_main_menu():
          0.Exit''')
 
 
-def choose_action():
+def choose_action() -> Optional[int]:
     """Выбор действия из главного меню."""
     try:
-        action = int(input('What would you like to do? '))
+        action: int = int(input('What would you like to do? '))
         if action not in (0, 1, 2, 3, 4, 5, 6):
             raise ValueError('Value is incorrect')
         return action
@@ -27,40 +28,40 @@ def choose_action():
         print('Value is incorrect. Try again.')
 
 
-def show_add_product_form():
-    category = input('Category: ')
-    product = input('Product: ')
-    cost = input('Cost: ')
-    date = input('Date: ')
+def show_add_product_form() -> (str, str, str, str):
+    category: str = input('Category: ')
+    product: str = input('Product: ')
+    cost: str = input('Cost: ')
+    date: str = input('Date: ')
     return category, product, cost, date
 
 
-def show_exit_form():
+def show_exit_form() -> None:
     print('Thanks!Have a good day!')
 
 
-def show_result(result):
+def show_result(result: pd.DataFrame) -> None:
     """Вывод результата манипуляций с базой данных."""
-    if not pn.DataFrame(result).empty:
+    if not pd.DataFrame(result).empty:
         print(result)
     else:
         print('No data')
 
 
-def message(text):
+def message(text: str) -> None:
     print(text)
 
 
-def show_delete_form():
-    id_product = input('Input id product. ')
+def show_delete_form() -> str:
+    id_product: str = input('Input id product. ')
     return id_product
 
 
-def show_filter_form(param_title, set_params):
+def show_filter_form(param_title: str, set_params: List[str]) -> Optional[str]:
     print('Choose ' + param_title)
-    if not pn.DataFrame(set_params).empty:
+    if not pd.DataFrame(set_params).empty:
         print(*set_params, sep='\n')
-        param_item = input(param_title + ': ')
+        param_item: str = input(param_title + ': ')
         return param_item
     else:
         print('No data')
