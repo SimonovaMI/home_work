@@ -2,6 +2,7 @@
 Модуль для создания контроллера. Запуск приложения осуществляется из этого модуля
 """
 from tkinter import *
+from tkinter.messagebox import showwarning
 import airports.view.view as v
 import airports.model as m
 
@@ -43,8 +44,11 @@ class Controller:
         Перед созданием формы получает данные из базы данных, чтобы запросы выполнялись быстрее, так как данные
         меняются редко - это оптимальный вариант. После - создание главной формы
         """
-        cls.model.get_result()
-        cls.main.show_form(v.MainMenu, "620x140", "Авиасообщение")
+        try:
+            cls.model.get_result()
+            cls.main.show_form(v.MainMenu, "620x140", "Авиасообщение")
+        except IOError as e:
+            showwarning(title="Предупреждение", message=e)
 
     @classmethod
     def show_airports_x_y(cls):
@@ -96,9 +100,14 @@ class Controller:
         Получение данных по заданным ползователем критериям поиска
         """
         if isinstance(cls.main.flights, v.AirportsXY):
+            lat_column = 3
+            long_column = 4
+
             def filter_func(airport):
-                if float(cls.main.flights.lat_min_value) <= airport[3] <= float(cls.main.flights.lat_max_value):
-                    if float(cls.main.flights.long_min_value) <= airport[4] <= float(cls.main.flights.long_max_value):
+                if (float(cls.main.flights.lat_min_value) <= airport[lat_column] <=
+                        float(cls.main.flights.lat_max_value)):
+                    if (float(cls.main.flights.long_min_value) <= airport[long_column] <=
+                            float(cls.main.flights.long_max_value)):
                         return True
                     else:
                         return False
@@ -106,8 +115,12 @@ class Controller:
             return list(filter(filter_func, cls.model.result_airports))
 
         if isinstance(cls.main.flights, v.FlightsBtwCities):
+            city_src_column = 1
+            city_dst_column = 5
+
             def filter_func(route):
-                if cls.main.flights.from_city_value == route[1] and cls.main.flights.to_city_value == route[5]:
+                if (cls.main.flights.from_city_value == route[city_src_column] and
+                        cls.main.flights.to_city_value == route[city_dst_column]):
                     return True
                 else:
                     return False
@@ -115,8 +128,10 @@ class Controller:
             return list(filter(filter_func, cls.model.result_routes))
 
         if isinstance(cls.main.flights, v.FlightsFromCity):
+            city_src_column = 1
+
             def filter_func(route):
-                if cls.main.flights.from_city_value == route[1]:
+                if cls.main.flights.from_city_value == route[city_src_column]:
                     return True
                 else:
                     return False
@@ -124,8 +139,10 @@ class Controller:
             return list(filter(filter_func, cls.model.result_routes))
 
         if isinstance(cls.main.flights, v.FlightsToCity):
+            city_dst_column = 5
+
             def filter_func(route):
-                if cls.main.flights.to_city_value == route[5]:
+                if cls.main.flights.to_city_value == route[city_dst_column]:
                     return True
                 else:
                     return False
