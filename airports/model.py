@@ -1,14 +1,27 @@
+"""
+Модуль для непосредственной работы с базой данных
+"""
 from mysql.connector import connect, Error
 import __init__ as ini
 
 
 class Model:
+    """
+    Класс модель для получения данных из базы данных в сыром варианте
+    result_airports - аэропорты
+    result_routes - рейсы
+    result_cities - города
+    """
     result_airports = None
     result_routes = None
     result_cities = None
 
     @classmethod
     def get_result(cls):
+        """
+        Установление соединения с базой данных. Получение массивов данных, необходимых для выполнения запросов, согласно
+        требованиям к приложению. В случае проблем с соединением с базой данных возбуждается исключение.
+        """
         try:
             with connect(
                     host=ini.host,

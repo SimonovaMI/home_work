@@ -1,3 +1,6 @@
+"""
+Модуль для создания абстрактных классов форм отображения
+"""
 from tkinter import *
 from abc import ABC, abstractmethod
 from tkinter import ttk
@@ -6,8 +9,16 @@ import airports.controller as c
 
 
 class Form(Frame, ABC):
+    """
+    Абстрактный класс-предок всех форм отображения.
+    """
 
     def __init__(self, master, geometry, title):
+        """
+        :param master: окно приложения
+        :param geometry: размеры окна
+        :param title: название окна
+        """
         super().__init__(master)
         self.grid()
         self.geometry = geometry
@@ -15,17 +26,34 @@ class Form(Frame, ABC):
 
     @abstractmethod
     def create_widgets(self):
+        """
+        Для создание виджетов
+        """
         pass
 
 
 class FormInputOutput(Form):
+    """
+    Абстрактный класс-предок для форм отображения с выводом результатов в виде таблицы
+    """
+
     def __init__(self, master, geometry, title):
+        """
+        Задает параметры окна, создает переменные для таблицы и полосы прокрутки, запускает метод создания виджетов
+        :param master: окно приложения
+        :param geometry: размеры окна
+        :param title: название окна
+        """
         super().__init__(master, geometry, title)
         self.scroll_pane = None
         self.table = None
         self.create_widgets()
 
     def create_table(self, heads):
+        """
+        Метод для создания таблицы с полосой прокрутки
+        :param heads: наименование столбцов в виде списка
+        """
         self.table = ttk.Treeview(self, show='headings')
         self.table['columns'] = heads
         for i in heads:
@@ -37,20 +65,36 @@ class FormInputOutput(Form):
 
     @abstractmethod
     def create_widgets(self):
-        pass
-
-    @abstractmethod
-    def check_input(self):
+        """
+        Метод для создания виджетов
+        """
         pass
 
     @abstractmethod
     def get_input(self):
+        """
+        Метод получения пользовательского ввода
+        """
+        pass
+
+    @abstractmethod
+    def check_input(self):
+        """
+        Метод проверки пользовательского ввода
+        """
         pass
 
     def show_warning(self, msg):
+        """
+        Показывает сообщение с предупреждением о некорректном вводе
+        :param msg: сообщение об ошибке пользовательского ввода
+        """
         showwarning(title="Предупреждение", message=msg)
 
     def show_result_table(self):
+        """
+        Метод для вывода данных - результатов запроса в таблицу
+        """
         self.get_input()
         if self.check_input():
             self.table.delete(*self.table.get_children())
